@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/timeTableFragment"
+        android:icon="@drawable/ic_timetable_24dp"
+        android:title="Time Table"/>
+    <item
+        android:id="@+id/attendanceFragment"
+        android:icon="@drawable/ic_attendance_24dp"
+        android:title="Attendance"/>
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="Settings"/>
+
+
+</menu>

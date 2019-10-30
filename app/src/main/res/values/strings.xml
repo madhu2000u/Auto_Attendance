@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Auto Attendance</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="map_access_token">pk.eyJ1Ijoic2hhbWJ1MmsiLCJhIjoiY2syYzczaGFkMDI1NTNtbzBlNWk3MjA2YiJ9.l5_UqGsJd2nCIEY_xVcslA</string>
+    <string name="current_location">Lat: %1$f Long: %2$f</string>
+</resources>

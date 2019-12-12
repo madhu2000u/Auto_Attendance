@@ -1,20 +1,23 @@
 package com.shambu.autoattendance;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
-import android.location.Location;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mapbox.android.core.location.LocationEngine;
-import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.location.LocationComponentOptions;
@@ -34,10 +37,38 @@ public class SelectClassLocation extends AppCompatActivity implements OnMapReady
     private MapView mapView;
     private MapboxMap mapboxMap;
     private PermissionsManager permissionsManager;
-    private Location currentLocation;
     private LocationComponent locationComponent;
     private boolean isInTrackingMode;
-    private FloatingActionButton currentLocation_fab;
+    private FloatingActionButton currentLocation_fab, searchLocation_fab;
+    private LatLng selectedLocation;
+    private CameraPosition cameraPosition;
+    private String geojsonSourceLayerId = "geojsonSourceLayerId";
+    private String symbolIconId = "symbolIconId";
+    private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
+    private MapboxMap.OnMapLongClickListener longClickListener = new MapboxMap.OnMapLongClickListener() {
+        @Override
+        public boolean onMapLongClick(@NonNull final LatLng point) {
+            final AlertDialog alertDialog = new AlertDialog.Builder(SelectClassLocation.this).create();
+            alertDialog.setTitle("Confirm Location!");
+            alertDialog.setMessage("Is this where you go to class?"+"\n"+point.getLatitude()+" , "+point.getLongitude());
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    selectedLocation = point;
+                    alertDialog.dismiss();
+                }
+            });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    alertDialog.dismiss();
+                }
+            });
+            alertDialog.show();
+            return false;
+        }
+    };
+
 
 
     @Override
@@ -48,24 +79,30 @@ public class SelectClassLocation extends AppCompatActivity implements OnMapReady
 
         mapView = findViewById(R.id.set_location_mapview);
         currentLocation_fab = findViewById(R.id.fab_goto_currentlocation);
+        searchLocation_fab = findViewById(R.id.fab_location_search);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-
-    /*    currentLocation_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goto_currentLocation();
-            }
-        });*/
     }
 
     @Override
-    public void onMapReady(@NonNull MapboxMap mapboxMap) {
+    public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
         mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 enableLocationComponent(style);
+                textSearch();
+            }
+        });
+        mapboxMap.addOnMapLongClickListener(longClickListener);
+
+    }
+
+    private void textSearch(){
+        searchLocation_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new PlaceAutocomplete
             }
         });
     }
@@ -108,17 +145,24 @@ public class SelectClassLocation extends AppCompatActivity implements OnMapReady
             // Add the camera tracking listener. Fires if the map camera is manually moved.
             locationComponent.addOnCameraTrackingChangedListener(this);
 
+            cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(locationComponent.getLastKnownLocation().getLatitude(), locationComponent.getLastKnownLocation().getLongitude()))
+                    .zoom(15)
+                    .tilt(40)
+                    .build();
+
             currentLocation_fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!isInTrackingMode) {
+                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 5000);
+           /*         if (!isInTrackingMode) {
                         isInTrackingMode = true;
                         locationComponent.setCameraMode(CameraMode.TRACKING);
                         locationComponent.zoomWhileTracking(16f);
                         Toast.makeText(SelectClassLocation.this, "Tracking Enabled", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(SelectClassLocation.this, "Already enabled", Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
                 }
             });
 
@@ -127,6 +171,7 @@ public class SelectClassLocation extends AppCompatActivity implements OnMapReady
             permissionsManager.requestLocationPermissions(this);
         }
     }
+
 
     @Override
     protected void onStart() {
@@ -161,6 +206,7 @@ public class SelectClassLocation extends AppCompatActivity implements OnMapReady
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mapboxMap.removeOnMapLongClickListener(longClickListener);
         mapView.onDestroy();
     }
 

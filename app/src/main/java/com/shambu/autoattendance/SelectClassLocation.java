@@ -1,258 +1,194 @@
 package com.shambu.autoattendance;
 
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mapbox.android.core.permissions.PermissionsListener;
-import com.mapbox.android.core.permissions.PermissionsManager;
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.location.LocationComponent;
-import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
-import com.mapbox.mapboxsdk.location.LocationComponentOptions;
-import com.mapbox.mapboxsdk.location.OnCameraTrackingChangedListener;
-import com.mapbox.mapboxsdk.location.OnLocationClickListener;
-import com.mapbox.mapboxsdk.location.modes.CameraMode;
-import com.mapbox.mapboxsdk.location.modes.RenderMode;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.maps.Style;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class SelectClassLocation extends AppCompatActivity implements OnMapReadyCallback, OnLocationClickListener, PermissionsListener, OnCameraTrackingChangedListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    private MapView mapView;
-    private MapboxMap mapboxMap;
-    private PermissionsManager permissionsManager;
-    private LocationComponent locationComponent;
-    private boolean isInTrackingMode;
-    private FloatingActionButton currentLocation_fab, searchLocation_fab;
-    private LatLng selectedLocation;
-    private CameraPosition cameraPosition;
-    private String geojsonSourceLayerId = "geojsonSourceLayerId";
-    private String symbolIconId = "symbolIconId";
-    private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
-    private MapboxMap.OnMapLongClickListener longClickListener = new MapboxMap.OnMapLongClickListener() {
+public class SelectClassLocation extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+
+    private String TAG = SelectClassLocation.class.getSimpleName();
+
+    private GoogleMap mMap;
+    private LatLng chennai;
+    SupportMapFragment mapFrag;
+    LocationRequest mLocationRequest;
+    Location mLastLocation;
+    Marker mCurrLocationMarker;
+    FusedLocationProviderClient mFusedLocationClient;
+    LocationCallback mLocationCallback = new LocationCallback() {
         @Override
-        public boolean onMapLongClick(@NonNull final LatLng point) {
-            final AlertDialog alertDialog = new AlertDialog.Builder(SelectClassLocation.this).create();
-            alertDialog.setTitle("Confirm Location!");
-            alertDialog.setMessage("Is this where you go to class?"+"\n"+point.getLatitude()+" , "+point.getLongitude());
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    selectedLocation = point;
-                    alertDialog.dismiss();
+        public void onLocationResult(LocationResult locationResult) {
+            List<Location> locationList = locationResult.getLocations();
+            if (locationList.size() > 0) {
+                //The last location in the list is the newest
+                Location location = locationList.get(locationList.size() - 1);
+                Log.i("SelectLocationActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
+                mLastLocation = location;
+                if (mCurrLocationMarker != null) {
+                    mCurrLocationMarker.remove();
                 }
-            });
-            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    alertDialog.dismiss();
-                }
-            });
-            alertDialog.show();
-            return false;
+
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                //move map camera
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+            }
         }
     };
 
+    @BindView(R.id.fab_location_search)
+    FloatingActionButton searchFab;
+    
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Mapbox.getInstance(this, getString(R.string.map_access_token));
         setContentView(R.layout.activity_select_class_location);
+        ButterKnife.bind(this);
 
-        mapView = findViewById(R.id.set_location_mapview);
-        currentLocation_fab = findViewById(R.id.fab_goto_currentlocation);
-        searchLocation_fab = findViewById(R.id.fab_location_search);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        String apiKey = getString(R.string.googelemap_key);
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), apiKey);
+        }
+        PlacesClient placesClient = Places.createClient(this);
+
+        chennai = new LatLng(13.067439, 80.237617);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        initMap();
+    }
+
+    @OnClick(R.id.fab_location_search)
+    void searchAction() {
+        List<com.google.android.libraries.places.api.model.Place.Field> fields = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ID,
+                com.google.android.libraries.places.api.model.Place.Field.NAME,
+                com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
+                com.google.android.libraries.places.api.model.Place.Field.LAT_LNG);
+        // Start the autocomplete intent.
+        Intent intent = new Autocomplete.IntentBuilder(
+                AutocompleteActivityMode.FULLSCREEN, fields).setCountry("IN")
+                .build(this);
+        startActivityForResult(intent, 1);
     }
 
     @Override
-    public void onMapReady(@NonNull final MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
-        mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId() + ", " + place.getAddress());
+                Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
+                String address = place.getAddress();
+                // do query with address
+
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Toast.makeText(this, "Error: " + status.getStatusMessage(), Toast.LENGTH_LONG).show();
+                Log.i(TAG, status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "Map is ready");
+        mMap = googleMap;
+        mMap.setOnMapLongClickListener(this);
+      //  mMap.addMarker(markerOptions);
+      //  mMap.moveCamera(CameraUpdateFactory.newLatLng(chennai));
+
+        mLocationRequest = new LocationRequest();
+        //mLocationRequest.setInterval(5000); // two minute interval
+        //mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+        mMap.setMyLocationEnabled(true);
+    }
+
+    private void initMap() {
+        mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFrag.getMapAsync(SelectClassLocation.this);
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        Log.d(TAG, "LongClicked!");
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this).setMessage("Set this as your class" +
+                "room? "+latLng.latitude+", "+latLng.longitude).setTitle("Confirm?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
-            public void onStyleLoaded(@NonNull Style style) {
-                enableLocationComponent(style);
-                textSearch();
+            public void onClick(DialogInterface dialogInterface, int i) {
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("AutoAtt", 0); // 0 - for private mode
+                SharedPreferences.Editor editor = pref.edit();
+
+                editor.putString("ClassRoomLat", Double.toString(latLng.latitude));
+                editor.putString("ClassRoomLng", Double.toString(latLng.longitude));
+
+                editor.commit();
+
+                dialogInterface.cancel();
+                startActivity(new Intent(SelectClassLocation.this, MainActivity.class));
+            }
+        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
             }
         });
-        mapboxMap.addOnMapLongClickListener(longClickListener);
+
+        AlertDialog alertDialog = dialog.create();
+        alertDialog.show();
 
     }
 
-    private void textSearch(){
-        searchLocation_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new PlaceAutocomplete
-            }
-        });
-    }
-
-    @SuppressWarnings( {"MissingPermission"})
-    private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-        // Check if permissions are enabled and if not request
-        if (PermissionsManager.areLocationPermissionsGranted(this)) {
-
-            // Create and customize the LocationComponent's options
-            LocationComponentOptions customLocationComponentOptions = LocationComponentOptions.builder(this)
-                    .elevation(5)
-                    .accuracyAlpha(.6f)
-                       // accuracy color should be #4DB8FF
-                    .build();
-
-            // Get an instance of the component
-            locationComponent = mapboxMap.getLocationComponent();
-
-            LocationComponentActivationOptions locationComponentActivationOptions =
-                    LocationComponentActivationOptions.builder(this, loadedMapStyle)
-                            .locationComponentOptions(customLocationComponentOptions)
-                            .build();
-
-            // Activate with options
-            locationComponent.activateLocationComponent(locationComponentActivationOptions);
-
-            // Enable to make component visible
-            locationComponent.setLocationComponentEnabled(true);
-
-            // Set the component's camera mode
-            locationComponent.setCameraMode(CameraMode.TRACKING);
-
-            // Set the component's render mode
-            locationComponent.setRenderMode(RenderMode.COMPASS);
-
-            // Add the location icon click listener
-            locationComponent.addOnLocationClickListener(this);
-
-            // Add the camera tracking listener. Fires if the map camera is manually moved.
-            locationComponent.addOnCameraTrackingChangedListener(this);
-
-            cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(locationComponent.getLastKnownLocation().getLatitude(), locationComponent.getLastKnownLocation().getLongitude()))
-                    .zoom(15)
-                    .tilt(40)
-                    .build();
-
-            currentLocation_fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 5000);
-           /*         if (!isInTrackingMode) {
-                        isInTrackingMode = true;
-                        locationComponent.setCameraMode(CameraMode.TRACKING);
-                        locationComponent.zoomWhileTracking(16f);
-                        Toast.makeText(SelectClassLocation.this, "Tracking Enabled", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(SelectClassLocation.this, "Already enabled", Toast.LENGTH_SHORT).show();
-                    }*/
-                }
-            });
-
-        } else {
-            permissionsManager = new PermissionsManager(this);
-            permissionsManager.requestLocationPermissions(this);
-        }
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mapView.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapboxMap.removeOnMapLongClickListener(longClickListener);
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onExplanationNeeded(List<String> permissionsToExplain) {
-        Toast.makeText(this, "Location permission is needed", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onPermissionResult(boolean granted) {
-        if (granted) {
-            mapboxMap.getStyle(new Style.OnStyleLoaded() {
-                @Override
-                public void onStyleLoaded(@NonNull Style style) {
-                    enableLocationComponent(style);
-                }
-            });
-        } else {
-            Toast.makeText(this, "Permission not granted", Toast.LENGTH_LONG).show();
-            finish();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
-    public void onCameraTrackingDismissed() {
-        isInTrackingMode = false;
-    }
-
-    @Override
-    public void onCameraTrackingChanged(int currentMode) {
-
-    }
-
-    @SuppressWarnings( {"MissingPermission"})
-    @Override
-    public void onLocationComponentClick() {
-        if (locationComponent.getLastKnownLocation() != null) {
-            Toast.makeText(this, String.format(getString(R.string.current_location),
-                    locationComponent.getLastKnownLocation().getLatitude(),
-                    locationComponent.getLastKnownLocation().getLongitude()), Toast.LENGTH_LONG).show();
-        }
-    }
 
 }

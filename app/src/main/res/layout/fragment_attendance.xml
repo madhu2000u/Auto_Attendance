@@ -12,6 +12,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/set_location_card"
+            android:visibility="gone"
             android:layout_width="300dp"
             android:layout_height="300dp"
             app:layout_constraintBottom_toBottomOf="parent"

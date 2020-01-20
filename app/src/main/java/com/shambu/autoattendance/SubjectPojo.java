@@ -3,50 +3,97 @@ package com.shambu.autoattendance;
 import java.util.List;
 
 public class SubjectPojo {
-    private String subCode, subProf;
-    private int minPercentage;
+    private int minPer, sqlID;
+    private String subjectCode, subjectName, subjectProF, subColor = "#FF00FF";
     private List<SubjectSchedulePojo> schedule;
     private List<AttendanceHistoryPojo> attendanceHistory;
 
-    public SubjectPojo(String subCode, String subProf, int minPercentage,
+    public SubjectPojo(int sqlID, int minPer,
+                       String subjectCode, String subjectName, String subjectProF,
                        List<SubjectSchedulePojo> schedule, List<AttendanceHistoryPojo> attendanceHistory) {
-        this.subCode = subCode;
-        this.subProf = subProf;
-        this.minPercentage = minPercentage;
+        this.sqlID = sqlID;
+        this.minPer = minPer;
+        this.subjectCode = subjectCode;
+        this.subjectName = subjectName;
+        this.subjectProF = subjectProF;
         this.schedule = schedule;
         this.attendanceHistory = attendanceHistory;
     }
 
-    public SubjectPojo(String subCode, String subProf, int minPercentage,
-                       List<SubjectSchedulePojo> schedule) {
-        this.subCode = subCode;
-        this.subProf = subProf;
-        this.minPercentage = minPercentage;
+    public SubjectPojo(int sqlID, int minPer,
+                        String subjectCode, String subjectName, String subjectProF,
+                        List<SubjectSchedulePojo> schedule) {
+        this.sqlID = sqlID;
+        this.minPer = minPer;
+        this.subjectCode = subjectCode;
+        this.subjectName = subjectName;
+        this.subjectProF = subjectProF;
         this.schedule = schedule;
     }
 
-    public String getSubCode() {
-        return subCode;
+    public SubjectPojo(int minPer,
+                       String subjectCode, String subjectName, String subjectProF,
+                       List<SubjectSchedulePojo> schedule, List<AttendanceHistoryPojo> attendanceHistory) {
+        this.minPer = minPer;
+        this.subjectCode = subjectCode;
+        this.subjectName = subjectName;
+        this.subjectProF = subjectProF;
+        this.schedule = schedule;
+        this.attendanceHistory = attendanceHistory;
     }
 
-    public void setSubCode(String subCode) {
-        this.subCode = subCode;
+    public SubjectPojo(int minPer,
+                       String subjectCode, String subjectName, String subjectProF,
+                       List<SubjectSchedulePojo> schedule) {
+        this.minPer = minPer;
+        this.subjectCode = subjectCode;
+        this.subjectName = subjectName;
+        this.subjectProF = subjectProF;
+        this.schedule = schedule;
     }
 
-    public String getSubProf() {
-        return subProf;
+    public int getSqlID() {
+        return sqlID;
     }
 
-    public void setSubProf(String subProf) {
-        this.subProf = subProf;
+    public int getMinPer() {
+        return minPer;
     }
 
-    public int getMinPercentage() {
-        return minPercentage;
+    public void setMinPer(int minPer) {
+        this.minPer = minPer;
     }
 
-    public void setMinPercentage(int minPercentage) {
-        this.minPercentage = minPercentage;
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public String getSubjectProF() {
+        return subjectProF;
+    }
+
+    public void setSubjectProF(String subjectProF) {
+        this.subjectProF = subjectProF;
+    }
+
+    public String getSubColor() {
+        return subColor;
+    }
+
+    public void setSubColor(String subColor) {
+        this.subColor = subColor;
     }
 
     public List<SubjectSchedulePojo> getSchedule() {

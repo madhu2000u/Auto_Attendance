@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.shambu.autoattendance"
         minSdkVersion 21
@@ -47,4 +47,7 @@ dependencies {
     //Google play services
     implementation 'com.google.maps.android:android-maps-utils:0.5'
     implementation 'com.google.android.libraries.places:places:2.0.0'
+
+    implementation 'com.github.EunsilJo:TimeTable:1.0'
+
 }

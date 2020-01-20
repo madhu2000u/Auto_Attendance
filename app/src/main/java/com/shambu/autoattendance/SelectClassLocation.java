@@ -177,6 +177,7 @@ public class SelectClassLocation extends AppCompatActivity implements OnMapReady
 
                 dialogInterface.cancel();
                 startActivity(new Intent(SelectClassLocation.this, MainActivity.class));
+                finish();
             }
         }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
             @Override

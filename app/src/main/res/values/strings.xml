@@ -5,4 +5,15 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="googelemap_key">AIzaSyCVvkqVdkcHZIDBfotHFR71UL0lSjO8KLE</string>
     <string name="current_location">Lat: %1$f Long: %2$f</string>
+
+    <string-array name="timetable_columns">
+        <item></item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
 </resources>

@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewSubject"></activity>
+        <activity android:name=".NewSubject" android:theme="@style/AppThemeNAB"></activity>
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -26,6 +26,9 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <activity
             android:name=".SelectClassLocation"

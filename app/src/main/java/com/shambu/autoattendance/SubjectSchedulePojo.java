@@ -1,38 +1,54 @@
 package com.shambu.autoattendance;
 
-import java.sql.Time;
-
 public class SubjectSchedulePojo {
-    private String day;
-    private Time fromTime, toTime;
+    private int day, fH, fM, tH, tM;
 
-    public SubjectSchedulePojo(String day, Time fromTime, Time toTime) {
+    public SubjectSchedulePojo(int day, int fH, int fM, int tH, int tM) {
         this.day = day;
-        this.fromTime = fromTime;
-        this.toTime = toTime;
+        this.fH = fH;
+        this.fM = fM;
+        this.tH = tH;
+        this.tM = tM;
+
     }
 
-    public String getDay() {
+    public int getDay() {
         return day;
     }
 
-    public void setDay(String day) {
+    public void setDay(int day) {
         this.day = day;
     }
 
-    public Time getFromTime() {
-        return fromTime;
+    public int getfH() {
+        return fH;
     }
 
-    public void setFromTime(Time fromTime) {
-        this.fromTime = fromTime;
+    public void setfH(int fH) {
+        this.fH = fH;
     }
 
-    public Time getToTime() {
-        return toTime;
+    public int getfM() {
+        return fM;
     }
 
-    public void setToTime(Time toTime) {
-        this.toTime = toTime;
+    public void setfM(int fM) {
+        this.fM = fM;
+    }
+
+    public int gettH() {
+        return tH;
+    }
+
+    public void settH(int tH) {
+        this.tH = tH;
+    }
+
+    public int gettM() {
+        return tM;
+    }
+
+    public void settM(int tM) {
+        this.tM = tM;
     }
 }

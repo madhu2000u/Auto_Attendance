@@ -5,10 +5,12 @@ import java.sql.Date;
 public class AttendanceHistoryPojo {
     private Date date;
     private Boolean attendance;
+    private Boolean classHappened;
 
-    public AttendanceHistoryPojo(Date date, Boolean attendance) {
+    public AttendanceHistoryPojo(Date date, Boolean attendance, Boolean classHappened) {
         this.date = date;
         this.attendance = attendance;
+        this.classHappened = classHappened;
     }
 
     public Date getDate() {
@@ -25,5 +27,13 @@ public class AttendanceHistoryPojo {
 
     public void setAttendance(Boolean attendance) {
         this.attendance = attendance;
+    }
+
+    public Boolean getClassHappened() {
+        return classHappened;
+    }
+
+    public void setClassHappened(Boolean classHappened) {
+        this.classHappened = classHappened;
     }
 }

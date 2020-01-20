@@ -5,6 +5,7 @@ import androidx.fragment.app.DialogFragment;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -25,6 +26,8 @@ public class NewSubject extends AppCompatActivity implements View.OnClickListene
 
     @BindView(R.id.subcode_edt)
     TextInputEditText subCode;
+    @BindView(R.id.subName_edt)
+    TextInputEditText subName;
     @BindView(R.id.profName_edt)
     TextInputEditText profName;
     @BindView(R.id.minper_edt)
@@ -77,6 +80,7 @@ public class NewSubject extends AppCompatActivity implements View.OnClickListene
     @BindView(R.id.sun_to)
     TextView tsun;
 
+    private static final String TAG = "NewSubject";
     private int mHour, mMin;
     private List<SubjectSchedulePojo> subSchedule;
     private SubjectPojo subjectData;
@@ -112,10 +116,21 @@ public class NewSubject extends AppCompatActivity implements View.OnClickListene
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int min) {
-                if (min == 0) {
-                    v.setText(hour + ":" + min + "0");
-                } else {
-                    v.setText(hour + ":" + min);
+                if(hour/10 == 0){
+                    if(min/10 == 0){
+                        v.setText("0"+hour + ":0" + min);
+                    }
+                    else{
+                        v.setText("0"+hour + ":" + min);
+                    }
+                }
+                else {
+                    if(min/10 == 0){
+                        v.setText(hour + ":0" + min);
+                    }
+                    else{
+                        v.setText(hour + ":" + min);
+                    }
                 }
             }
         }, mHour, mMin, true);
@@ -125,52 +140,64 @@ public class NewSubject extends AppCompatActivity implements View.OnClickListene
     @OnClick(R.id.add_button)
     void saveSubject() {
         if (mon.isChecked()) {
-            SubjectSchedulePojo ss = new SubjectSchedulePojo("Mon",
-                    textViewToTime(fmon), textViewToTime(tmon));
+            SubjectSchedulePojo ss = new SubjectSchedulePojo(0,
+                    getH(fmon), getM(fmon), getH(tmon), getM(tmon));
             subSchedule.add(ss);
         }
         if (tue.isChecked()) {
-            SubjectSchedulePojo ss = new SubjectSchedulePojo("Tue",
-                    textViewToTime(ftue), textViewToTime(ttue));
+            SubjectSchedulePojo ss = new SubjectSchedulePojo(1,
+                    getH(ftue), getM(ftue), getH(ttue), getM(ttue));
             subSchedule.add(ss);
         }
         if (wed.isChecked()) {
-            SubjectSchedulePojo ss = new SubjectSchedulePojo("Wed",
-                    textViewToTime(fwed), textViewToTime(twed));
+            SubjectSchedulePojo ss = new SubjectSchedulePojo(2,
+                    getH(fwed), getM(fwed), getH(twed), getM(twed));
             subSchedule.add(ss);
         }
         if (thur.isChecked()) {
-            SubjectSchedulePojo ss = new SubjectSchedulePojo("Thur",
-                    textViewToTime(fthur), textViewToTime(tthur));
+            SubjectSchedulePojo ss = new SubjectSchedulePojo(3,
+                    getH(fthur), getM(fthur), getH(tthur), getM(tthur));
             subSchedule.add(ss);
         }
         if (fri.isChecked()) {
-            SubjectSchedulePojo ss = new SubjectSchedulePojo("Fri",
-                    textViewToTime(ffri), textViewToTime(tfri));
+            SubjectSchedulePojo ss = new SubjectSchedulePojo(4,
+                    getH(ffri), getM(ffri), getH(tfri), getM(tfri));
             subSchedule.add(ss);
         }
         if (sat.isChecked()) {
-            SubjectSchedulePojo ss = new SubjectSchedulePojo("Sat",
-                    textViewToTime(fsat), textViewToTime(tsat));
+            SubjectSchedulePojo ss = new SubjectSchedulePojo(5,
+                    getH(fsat), getM(fsat), getH(tsat), getM(tsat));
             subSchedule.add(ss);
         }
         if (sun.isChecked()) {
-            SubjectSchedulePojo ss = new SubjectSchedulePojo("Sun",
-                    textViewToTime(fsun), textViewToTime(tsun));
+            SubjectSchedulePojo ss = new SubjectSchedulePojo(6,
+                    getH(fsun), getM(fsun), getH(tsun), getM(tsun));
             subSchedule.add(ss);
         }
-        subjectData = new SubjectPojo(subCode.getText().toString(), profName.getText().toString(),
-                Integer.parseInt(subMinPercentage.getText().toString()), subSchedule);
+        subjectData = new SubjectPojo(Integer.parseInt(subMinPercentage.getText().toString()),
+                subCode.getText().toString(), subName.getText().toString(), profName.getText().toString(), subSchedule);
+
+        AutoAttendanceData sqlTable = new AutoAttendanceData(NewSubject.this);
+        sqlTable.addNewSubtoSQL(subjectData);
         finish();
     }
 
-    private Time textViewToTime(TextView tv) {
-        int h, m;
+    private int getH(TextView tv) {
+        int h;
         String tvText = tv.getText().toString();
+        Log.d(TAG, tvText);
         h = Integer.parseInt(String.valueOf(tvText.charAt(1))) * 1 + Integer.parseInt(String.valueOf(tvText.charAt(0))) * 10;
+
+        return h;
+    }
+
+    private int getM(TextView tv) {
+        int m;
+        String tvText = tv.getText().toString();
+        Log.d(TAG, tvText);
         m = Integer.parseInt(String.valueOf(tvText.charAt(4))) * 1 + Integer.parseInt(String.valueOf(tvText.charAt(3))) * 10;
 
-        Time time = new Time(h, m, 0);
-        return time;
+        return m;
     }
+
 }

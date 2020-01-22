@@ -1,4 +1,4 @@
-package com.shambu.autoattendance;
+package com.shambu.autoattendance.DataClasses;
 
 import java.util.List;
 

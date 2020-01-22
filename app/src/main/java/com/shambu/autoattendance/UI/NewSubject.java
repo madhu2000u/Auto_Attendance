@@ -1,8 +1,8 @@
-package com.shambu.autoattendance;
+package com.shambu.autoattendance.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
+import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,8 +13,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.shambu.autoattendance.AutoAttendanceData;
+import com.shambu.autoattendance.DataClasses.SubjectPojo;
+import com.shambu.autoattendance.DataClasses.SubjectSchedulePojo;
+import com.shambu.autoattendance.R;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -179,6 +182,7 @@ public class NewSubject extends AppCompatActivity implements View.OnClickListene
 
         AutoAttendanceData sqlTable = new AutoAttendanceData(NewSubject.this);
         sqlTable.addNewSubtoSQL(subjectData);
+        setResult(Activity.RESULT_OK);
         finish();
     }
 

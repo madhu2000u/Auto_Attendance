@@ -1,23 +1,21 @@
-package com.shambu.autoattendance;
-
-import java.sql.Date;
+package com.shambu.autoattendance.DataClasses;
 
 public class AttendanceHistoryPojo {
-    private Date date;
+    private String date;
     private Boolean attendance;
     private Boolean classHappened;
 
-    public AttendanceHistoryPojo(Date date, Boolean attendance, Boolean classHappened) {
+    public AttendanceHistoryPojo(String date, Boolean attendance, Boolean classHappened) {
         this.date = date;
         this.attendance = attendance;
         this.classHappened = classHappened;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

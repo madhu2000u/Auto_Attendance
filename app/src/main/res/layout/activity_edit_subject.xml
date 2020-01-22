@@ -5,15 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
-    tools:context=".UI.NewSubject">
+    tools:context=".UI.EditSubjectActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:title="Add a subject"
+        app:title="Edit this subject"
         app:titleTextColor="@android:color/white" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -24,7 +23,7 @@
         android:paddingHorizontal="9dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/subcode_edt"
+            android:id="@+id/subcode_edt_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1" />
@@ -39,7 +38,7 @@
         android:paddingHorizontal="9dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/subName_edt"
+            android:id="@+id/subName_edt_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1" />
@@ -54,7 +53,7 @@
         android:paddingHorizontal="9dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/profName_edt"
+            android:id="@+id/profName_edt_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1" />
@@ -69,7 +68,7 @@
         android:paddingHorizontal="9dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/minper_edt"
+            android:id="@+id/minper_edt_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
@@ -90,7 +89,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/mon_chk"
+                android:id="@+id/mon_chk_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Monday"
@@ -101,25 +100,25 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/mon_from"
+                android:id="@+id/mon_from_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="From"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.25"
-                app:layout_constraintStart_toEndOf="@+id/mon_chk"
+                app:layout_constraintStart_toEndOf="@+id/mon_chk_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
             <TextView
-                android:id="@+id/mon_to"
+                android:id="@+id/mon_to_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="To"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/mon_from"
+                app:layout_constraintStart_toEndOf="@+id/mon_from_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -129,7 +128,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/tue_chk"
+                android:id="@+id/tue_chk_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tuesday"
@@ -140,25 +139,25 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tue_from"
+                android:id="@+id/tue_from_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="From"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.24"
-                app:layout_constraintStart_toEndOf="@+id/tue_chk"
+                app:layout_constraintStart_toEndOf="@+id/tue_chk_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
             <TextView
-                android:id="@+id/tue_to"
+                android:id="@+id/tue_to_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="To"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tue_from"
+                app:layout_constraintStart_toEndOf="@+id/tue_from_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -168,7 +167,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/wed_chk"
+                android:id="@+id/wed_chk_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Wednesday"
@@ -179,25 +178,25 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/wed_from"
+                android:id="@+id/wed_from_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="From"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.16"
-                app:layout_constraintStart_toEndOf="@+id/wed_chk"
+                app:layout_constraintStart_toEndOf="@+id/wed_chk_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
             <TextView
-                android:id="@+id/wed_to"
+                android:id="@+id/wed_to_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="To"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/wed_from"
+                app:layout_constraintStart_toEndOf="@+id/wed_from_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -207,7 +206,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/thur_chk"
+                android:id="@+id/thur_chk_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Thursday"
@@ -218,25 +217,25 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/thur_from"
+                android:id="@+id/thur_from_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="From"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.22"
-                app:layout_constraintStart_toEndOf="@+id/thur_chk"
+                app:layout_constraintStart_toEndOf="@+id/thur_chk_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
             <TextView
-                android:id="@+id/thur_to"
+                android:id="@+id/thur_to_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="To"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/thur_from"
+                app:layout_constraintStart_toEndOf="@+id/thur_from_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -246,7 +245,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/fri_chk"
+                android:id="@+id/fri_chk_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Friday"
@@ -257,25 +256,25 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/fri_from"
+                android:id="@+id/fri_from_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="From"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.285"
-                app:layout_constraintStart_toEndOf="@+id/fri_chk"
+                app:layout_constraintStart_toEndOf="@+id/fri_chk_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
             <TextView
-                android:id="@+id/fri_to"
+                android:id="@+id/fri_to_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="To"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/fri_from"
+                app:layout_constraintStart_toEndOf="@+id/fri_from_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -285,7 +284,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/sat_chk"
+                android:id="@+id/sat_chk_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Saturday"
@@ -296,25 +295,25 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/sat_from"
+                android:id="@+id/sat_from_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="From"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.228"
-                app:layout_constraintStart_toEndOf="@+id/sat_chk"
+                app:layout_constraintStart_toEndOf="@+id/sat_chk_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
             <TextView
-                android:id="@+id/sat_to"
+                android:id="@+id/sat_to_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="To"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/sat_from"
+                app:layout_constraintStart_toEndOf="@+id/sat_from_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -324,7 +323,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/sun_chk"
+                android:id="@+id/sun_chk_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sunday"
@@ -335,35 +334,46 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/sun_from"
+                android:id="@+id/sun_from_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="From"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.26"
-                app:layout_constraintStart_toEndOf="@+id/sun_chk"
+                app:layout_constraintStart_toEndOf="@+id/sun_chk_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
             <TextView
-                android:id="@+id/sun_to"
+                android:id="@+id/sun_to_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="To"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/sun_from"
+                app:layout_constraintStart_toEndOf="@+id/sun_from_edt"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
     <Button
-        android:id="@+id/add_button"
+        android:id="@+id/save_button"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Add" />
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/delete_button"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="#FF0000"
+        android:text="DELETE!!" />
+
+
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.shambu.autoattendance;
+package com.shambu.autoattendance.UI;
 
 
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.shambu.autoattendance.R;
 
 
 public class SettingsFragment extends Fragment {

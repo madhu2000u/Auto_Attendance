@@ -7,17 +7,23 @@
 
     <fragment
         android:id="@+id/attendanceFragment"
-        android:name="com.shambu.autoattendance.AttendanceFragment"
+        android:name="com.shambu.autoattendance.UI.AttendanceFragment"
         android:label="fragment_attendance"
         tools:layout="@layout/fragment_attendance" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.shambu.autoattendance.SettingsFragment"
+        android:name="com.shambu.autoattendance.UI.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/timeTableFragment"
-        android:name="com.shambu.autoattendance.TimeTableFragment"
+        android:name="com.shambu.autoattendance.UI.TimeTableFragment"
         android:label="fragment_time_table"
-        tools:layout="@layout/fragment_time_table" />
+        tools:layout="@layout/fragment_time_table" >
+        <action
+            android:id="@+id/action_timeTableFragment_self"
+            app:destination="@id/timeTableFragment"
+            app:popUpTo="@id/timeTableFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

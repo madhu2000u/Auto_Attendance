@@ -14,7 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewSubject" android:theme="@style/AppThemeNAB"></activity>
+        <activity
+            android:name=".UI.EditSubjectActivity"
+            android:theme="@style/AppThemeNAB"></activity>
+        <activity
+            android:name=".UI.NewSubject"
+            android:theme="@style/AppThemeNAB" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -31,9 +36,9 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".SelectClassLocation"
+            android:name=".UI.SelectClassLocation"
             android:theme="@style/AppThemeNAB" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".UI.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

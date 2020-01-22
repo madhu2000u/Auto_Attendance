@@ -1,21 +1,26 @@
 package com.shambu.autoattendance;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.shambu.autoattendance.DataClasses.AttendanceHistoryPojo;
+import com.shambu.autoattendance.DataClasses.SubjectPojo;
+
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class AttendanceRVadapter extends RecyclerView.Adapter {
 
     private static final String TAG = "AttendanceRVadapter";
+    private static DecimalFormat df = new DecimalFormat("0.00");
 
     private AttendanceMarkingListener attendanceMarkingListener;
     private Context mContext;
@@ -51,12 +56,12 @@ public class AttendanceRVadapter extends RecyclerView.Adapter {
         return allSubjects.size();
     }
 
-    private class AttendancePercentageHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
+    private class AttendancePercentageHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private AttendanceMarkingListener mListener;
 
         TextView subcode, subname, profname, percentage, classesfrac;
-        ImageView present, noclass, absent;
+        Button present, noclass, absent;
 
         public AttendancePercentageHolder(@NonNull View itemView, AttendanceMarkingListener listener) {
             super(itemView);
@@ -70,9 +75,9 @@ public class AttendanceRVadapter extends RecyclerView.Adapter {
             noclass = itemView.findViewById(R.id.att_mark_noclass_imgv);
             absent = itemView.findViewById(R.id.att_mark_absent_imgv);
 
-            present.setOnTouchListener(this);
-            noclass.setOnTouchListener(this);
-            absent.setOnTouchListener(this);
+            present.setOnClickListener(this);
+            noclass.setOnClickListener(this);
+            absent.setOnClickListener(this);
 
         }
 
@@ -82,8 +87,14 @@ public class AttendanceRVadapter extends RecyclerView.Adapter {
                 subcode.setText(pojo.getSubjectCode());
                 subname.setText(pojo.getSubjectName());
                 profname.setText(pojo.getSubjectProF());
-                percentage.setText(((float)((classcount[0]/classcount[1])*100))+"%");
+                percentage.setText(df.format((((float)classcount[0])/classcount[1])*100)+"%");
                 classesfrac.setText(classcount[0]+"/"+classcount[1]);
+                if((((float)classcount[0])/classcount[1])*100 < pojo.getMinPer()){
+                    percentage.setTextColor(Color.RED);
+                }
+                else {
+                    percentage.setTextColor(Color.BLACK);
+                }
             }
             else {
                 subcode.setText(pojo.getSubjectCode());
@@ -95,10 +106,8 @@ public class AttendanceRVadapter extends RecyclerView.Adapter {
         }
 
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
+        public void onClick(View v) {
             mListener.markAttendanceClick(v, getAdapterPosition());
-
-            return true;
         }
     }
 

@@ -7,10 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.shambu.autoattendance.DataClasses.AttendanceHistoryPojo;
+import com.shambu.autoattendance.DataClasses.SubjectPojo;
+import com.shambu.autoattendance.DataClasses.SubjectSchedulePojo;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -105,7 +106,36 @@ public class AutoAttendanceData extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return subjects;
+    }
 
+    public SubjectPojo getSubjectData(String subName) {
+        SubjectPojo pojo;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL_SUBNAME + " = '" + subName + "'";
+
+        Cursor cursor = db.rawQuery(query, null);
+        Type listTypeSch = new TypeToken<List<SubjectSchedulePojo>>() {
+        }.getType();
+        Type listTypeAH = new TypeToken<List<AttendanceHistoryPojo>>() {
+        }.getType();
+
+        if (cursor.moveToFirst()) {
+            do {
+                pojo = new SubjectPojo(
+                        cursor.getInt(cursor.getColumnIndex(COL_ID)),
+                        cursor.getInt(cursor.getColumnIndex(COL_MINPER)),
+                        cursor.getString(cursor.getColumnIndex(COL_SUBCODE)),
+                        cursor.getString(cursor.getColumnIndex(COL_SUBNAME)),
+                        cursor.getString(cursor.getColumnIndex(COL_SUBPROF)),
+                        new Gson().fromJson(cursor.getString(cursor.getColumnIndex(COL_SCHEDULE)), listTypeSch),
+                        new Gson().fromJson(cursor.getString(cursor.getColumnIndex(COL_ATTENDANCE)), listTypeAH));
+                Log.d(TAG, "sche from table: " + cursor.getString(cursor.getColumnIndex(COL_SCHEDULE)));
+            } while (cursor.moveToNext());
+        }
+        else {
+            return null;
+        }
+        return pojo;
     }
 
     public List<SubjectSchedulePojo> getSubTimingsfromSQL(String code) {
@@ -167,13 +197,31 @@ public class AutoAttendanceData extends SQLiteOpenHelper {
         values.put(COL_MINPER, subjectData.getMinPer());
         values.put(COL_SCHEDULE, sche);
         Log.d(TAG, "Schedule " + sche);
-        values.put(COL_SCHEDULE, ah);
+        values.put(COL_ATTENDANCE, ah);
         Log.d(TAG, "AH " + ah);
 
-        db.update(TABLE_NAME, values, COL_SUBCODE + " = " + subjectData.getSubjectCode(), null);
+
+        db.update(TABLE_NAME, values, COL_SUBCODE + " = '" + subjectData.getSubjectCode() + "'", null);
         db.close();
         Log.d(TAG, "Updated!!");
     }
 
+    public void deleteSubject(String subcode){
+        SQLiteDatabase db = this.getWritableDatabase();
 
+        db.delete(TABLE_NAME, COL_SUBCODE+" = '"+subcode+"'", null);
+
+        db.close();
+        Log.d(TAG, "Deleted!!");
+    }
+
+    public void updateSubjectAttendance(String subcode, List<AttendanceHistoryPojo> historyPojos){
+        String ah = new Gson().toJson(historyPojos);
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateQuery = "UPDATE "+TABLE_NAME+" SET "+COL_ATTENDANCE+" = '"+ah+"' WHERE "+COL_SUBCODE+
+                " = '"+subcode+"'";
+        db.execSQL(updateQuery);
+        db.close();
+        Log.d(TAG, "Updated!! "+ah);
+    }
 }

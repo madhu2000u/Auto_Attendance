@@ -1,4 +1,4 @@
-package com.shambu.autoattendance;
+package com.shambu.autoattendance.DataClasses;
 
 public class SubjectSchedulePojo {
     private int day, fH, fM, tH, tM;

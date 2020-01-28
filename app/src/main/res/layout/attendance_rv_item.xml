@@ -7,6 +7,7 @@
 
     <LinearLayout
         android:layout_weight="1.25"
+        android:id="@+id/attendance_rv_item_ll2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginVertical="5dp"

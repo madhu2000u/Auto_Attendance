@@ -16,7 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.shambu.autoattendance.AttendanceMarkingListener;
+import com.shambu.autoattendance.AttendanceHistoryTimelineActivity;
+import com.shambu.autoattendance.AttendanceListener;
 import com.shambu.autoattendance.AttendanceRVadapter;
 import com.shambu.autoattendance.AutoAttendanceData;
 import com.shambu.autoattendance.DataClasses.AttendanceHistoryPojo;
@@ -32,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class AttendanceFragment extends Fragment implements AttendanceMarkingListener {
+public class AttendanceFragment extends Fragment implements AttendanceListener {
 
     private static final String TAG = "AttendanceFragment";
 
@@ -136,5 +137,14 @@ public class AttendanceFragment extends Fragment implements AttendanceMarkingLis
                 }
                 break;
         }
+    }
+
+    @Override
+    public void openAttendanceHistoryOnClick(int position) {
+
+        Intent intent = new Intent(getContext(), AttendanceHistoryTimelineActivity.class);
+        intent.putExtra("SubjectCode", allSubs.get(position).getSubjectCode());
+        startActivity(intent);
+
     }
 }

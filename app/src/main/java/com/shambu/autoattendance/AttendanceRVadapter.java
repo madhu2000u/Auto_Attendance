@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,13 +23,13 @@ public class AttendanceRVadapter extends RecyclerView.Adapter {
     private static final String TAG = "AttendanceRVadapter";
     private static DecimalFormat df = new DecimalFormat("0.00");
 
-    private AttendanceMarkingListener attendanceMarkingListener;
+    private AttendanceListener attendanceListener;
     private Context mContext;
     private List<SubjectPojo> allSubjects;
 
-    public AttendanceRVadapter(AttendanceMarkingListener attendanceMarkingListener,
+    public AttendanceRVadapter(AttendanceListener attendanceListener,
                                Context mContext, List<SubjectPojo> allSubjects) {
-        this.attendanceMarkingListener = attendanceMarkingListener;
+        this.attendanceListener = attendanceListener;
         this.mContext = mContext;
         this.allSubjects = allSubjects;
     }
@@ -40,7 +41,7 @@ public class AttendanceRVadapter extends RecyclerView.Adapter {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.attendance_rv_item, parent,
                 false);
 
-        return new AttendancePercentageHolder(view, attendanceMarkingListener);
+        return new AttendancePercentageHolder(view, attendanceListener);
     }
 
     @Override
@@ -58,12 +59,13 @@ public class AttendanceRVadapter extends RecyclerView.Adapter {
 
     private class AttendancePercentageHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private AttendanceMarkingListener mListener;
+        private AttendanceListener mListener;
 
         TextView subcode, subname, profname, percentage, classesfrac;
         Button present, noclass, absent;
+        LinearLayout ll;
 
-        public AttendancePercentageHolder(@NonNull View itemView, AttendanceMarkingListener listener) {
+        public AttendancePercentageHolder(@NonNull View itemView, AttendanceListener listener) {
             super(itemView);
             this.mListener = listener;
             subcode = itemView.findViewById(R.id.att_subcode_tv);
@@ -74,11 +76,12 @@ public class AttendanceRVadapter extends RecyclerView.Adapter {
             present = itemView.findViewById(R.id.att_mark_present_imgv);
             noclass = itemView.findViewById(R.id.att_mark_noclass_imgv);
             absent = itemView.findViewById(R.id.att_mark_absent_imgv);
+            ll = itemView.findViewById(R.id.attendance_rv_item_ll2);
 
             present.setOnClickListener(this);
             noclass.setOnClickListener(this);
             absent.setOnClickListener(this);
-
+            ll.setOnClickListener(this);
         }
 
         void bind(SubjectPojo pojo){
@@ -107,7 +110,12 @@ public class AttendanceRVadapter extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View v) {
-            mListener.markAttendanceClick(v, getAdapterPosition());
+            if(v.getId()==R.id.attendance_rv_item_ll2){
+                mListener.openAttendanceHistoryOnClick(getAdapterPosition());
+            }
+            else{
+                mListener.markAttendanceClick(v, getAdapterPosition());
+            }
         }
     }
 
